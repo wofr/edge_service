@@ -1,4 +1,13 @@
+#![feature(plugin)]
+#![feature(proc_macro_hygiene, decl_macro)]
+
+mod http;
+
 extern crate ctrlc;
+#[macro_use] extern crate rocket;
+extern crate rocket_contrib;
+extern crate serde_json;
+#[macro_use] extern crate serde_derive;
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
