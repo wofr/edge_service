@@ -11,8 +11,23 @@ extern crate serde_json;
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use structopt::StructOpt;
+
+
+// Command line arguments struct
+#[derive(StructOpt, Debug)]
+pub struct Cli {
+    #[structopt(short = "h", long = "httpPort")]
+    pub port_http: Option<u16>,
+}
 
 fn main() {
+
+    // Parse command line arguments
+    let args = Cli::from_args();
+
+    // Start Http Endpoint
+
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
