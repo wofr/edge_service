@@ -24,3 +24,5 @@ serde_json = "1.0"
 serde_derive = "1.0"
 # Parse command line argument by defining a struct
 structopt = { version = "0.2", default-features = false }
+# Extra iterator adaptors, iterator methods, free functions, and macros
+itertools = "0.8"

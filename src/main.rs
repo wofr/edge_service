@@ -2,7 +2,7 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 mod http;
-
+mod udp;
 extern crate ctrlc;
 #[macro_use] extern crate rocket;
 extern crate rocket_contrib;
@@ -12,6 +12,7 @@ extern crate serde_json;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use structopt::StructOpt;
+use http::start_http_endpoint;
 
 
 // Command line arguments struct
@@ -28,6 +29,7 @@ fn main() {
 
     // Start Http Endpoint
 
+    start_http_endpoint(&args.port_http);
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();

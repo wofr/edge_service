@@ -2,16 +2,24 @@ use rocket::config::{Config, Environment,ConfigError};
 use std::thread;
 use rocket::error::LaunchError;
 use rocket_contrib::json::{Json};
+use rocket::data::Data;
 
 #[derive(Deserialize)]
-pub struct Data {
+pub struct DataJson {
     data: String
 }
 
-#[put("/data", format = "application/json", data = "<jsond>")]
-pub fn put_data(jsond: Json<Data>) -> String {
+#[post("/upload", format = "plain", data = "<data>")]
+fn upload(data: Data) -> Option<String> {
+    data.stream_to_file("/tmp/upload.txt").map(|n| n.to_string());
+    None
+}
+
+
+#[post("/data", format = "application/json", data = "<jsond>")]
+pub fn put_data(jsond: Json<DataJson>) -> Option<String> {
     println!("Put data called {:?}",jsond.data);
-    String::from("Data")
+    Some(String::from("Data"))
 }
 
 pub fn start_http_endpoint(port_http: &Option<u16>)->std::thread::JoinHandle<LaunchError> {
@@ -20,7 +28,7 @@ pub fn start_http_endpoint(port_http: &Option<u16>)->std::thread::JoinHandle<Lau
     // Create an thread which spwans the Http endpoint
     let rocket_err = thread::spawn(move || {
         rocket::custom(http_config)
-            .mount("/",routes![put_data]).launch()
+            .mount("/",routes![put_data,upload]).launch()
     });
 
     rocket_err
