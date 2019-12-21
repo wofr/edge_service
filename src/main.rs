@@ -13,13 +13,15 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use structopt::StructOpt;
 use http::start_http_endpoint;
-
+use udp::*;
 
 // Command line arguments struct
 #[derive(StructOpt, Debug)]
 pub struct Cli {
     #[structopt(short = "h", long = "httpPort")]
     pub port_http: Option<u16>,
+    #[structopt(short = "u", long = "httpUDP")]
+    pub port_udp: u32,
 }
 
 fn main() {
@@ -30,6 +32,9 @@ fn main() {
     // Start Http Endpoint
 
     start_http_endpoint(&args.port_http);
+
+    let mut endpoint = udp::UDP_Endpoint::new(args.port_udp);
+    let (q_sender,msg_rec) =   endpoint.start_Server();
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
